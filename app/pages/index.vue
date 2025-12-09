@@ -1,6 +1,6 @@
 <template>
   <UContainer class="py-10">
-    <UCard>
+    <UCard class="mb-4">
       <div class="flex justify-between items-center mb-6">
         <div>
           <p class="text-sm opacity-70 mb-1">Welcome to</p>
