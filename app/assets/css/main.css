@@ -1,2 +1,9 @@
 @import "tailwindcss";
-@import "@nuxt/ui";
+
+/* custom base styles */
+body { font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+html, body { height: 100%; }
+#app { min-height: 100%; }
+
+/* Optional: simple card styles */
+.card { @apply bg-white shadow rounded p-4; }

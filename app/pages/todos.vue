@@ -1,48 +1,53 @@
 <template>
-  <UContainer>
-    <!--- Header -->
-    <UHeader to="/todos">
-      <template #title> Todos </template>
-      <p class="text-black">8 기 공 식 미 녀 박 수 현</p>
-    </UHeader>
-    <!--- main -->
-    <UCard class="my-4">
-      <template #header>
-        <p>할 일 추가</p>
-      </template>
-      <UForm class="flex" @submit="addTodo">
-        <UInput
-          v-model="todoTitle"
-          color="neutral"
-          placeholder="제목"
-          class="flex-1"
-        ></UInput>
-        <UInput
-          v-model="todoContents"
-          color="neutral"
-          placeholder="내용"
-          class="flex-2 mx-2"
-        ></UInput>
-        <UButton class="px-4" type="submit">제출</UButton>
-      </UForm>
-    </UCard>
-    <UCard>
-      <template #header>
-        <p>할 일 목록</p>
-      </template>
-      <UTable :data="todos" :columns="columns"></UTable>
-    </UCard>
-    <!--- footer -->
-    <UFooter>
-      <p class="font-semibold">Copyright © ABKO</p>
-    </UFooter>
-  </UContainer>
+  <div class="container mx-auto p-4">
+    <header class="mb-3">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold">Todos</h2>
+        <p class="text-black">8 기 공 식 미 녀 박 수 현</p>
+      </div>
+    </header>
+
+    <section class="card my-4">
+      <div class="mb-2 font-semibold">할 일 추가</div>
+      <form class="flex" @submit.prevent="addTodo">
+        <input v-model="todoTitle" placeholder="제목" class="flex-1 border rounded px-3 py-2" />
+        <input v-model="todoContents" placeholder="내용" class="flex-2 mx-2 border rounded px-3 py-2" />
+        <button class="px-4 bg-blue-600 text-white rounded" type="submit">제출</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="mb-2 font-semibold">할 일 목록</div>
+      <table class="w-full table-auto">
+        <thead class="border-b">
+          <tr class="text-left">
+            <th class="py-2">ID</th>
+            <th class="py-2">작성일</th>
+            <th class="py-2">제목</th>
+            <th class="py-2">내용</th>
+            <th class="py-2">삭제</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-if="todos.length === 0" class="text-center table-row w-full justify-center">
+            <td colspan="5">할 일이 없습니다.</td>
+          </tr>
+          <tr v-for="todo in todos" :key="todo.id" class="border-b-gray-500 border-b">
+            <td class="py-2 font-bold">{{ todo.id }}</td>
+            <td class="py-2">{{ todo.createdAt.toLocaleString('ko-KR', { dateStyle: 'short', timeStyle: 'short' }) }}</td>
+            <td class="py-2">{{ todo.title }}</td>
+            <td class="py-2">{{ todo.contents }}</td>
+            <td class="py-2"><button class="px-2 py-1 bg-red-600 text-white rounded" @click="removeTodo(todo.id)">삭제</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer class="mt-4 text-center text-sm text-gray-600">Copyright © ABKO</footer>
+  </div>
 </template>
 
 <script setup lang="ts">
-import type { TableColumn } from "@nuxt/ui";
-
-const UButton = resolveComponent("UButton");
 
 type Todo = {
   id: number;
@@ -51,43 +56,9 @@ type Todo = {
   createdAt: Date;
 };
 
-const todoTitle = ref<string>("");
-const todoContents = ref<string>("");
+const todoTitle = ref<string>('');
+const todoContents = ref<string>('');
 const todos = ref<Todo[]>([]);
-
-const columns: TableColumn<Todo>[] = [
-  { accessorKey: "id",
-    cell: ({row}) => h('span', {
-        class: 'font-bold text-black'
-    }, row.original.id)
-   },
-  {
-    accessorKey: "createdAt",
-    header: "작성일",
-    cell: ({ row }) =>
-      row.original.createdAt.toLocaleString("ko-KR", {
-        dateStyle: "short",
-        timeStyle: "short",
-      }),
-  },
-  { accessorKey: "title", header: "제목" },
-  { accessorKey: "contents", header: "내용" },
-  {
-    id: "delete",
-    header: "삭제",
-    cell: ({ row }) => {
-      return h(
-        UButton,
-        {
-          class: "px-4",
-          color: "error",
-          onClick: () => removeTodo(row.original.id),
-        },
-        "삭제"
-      );
-    },
-  },
-];
 
 let id = 0;
 
@@ -99,8 +70,8 @@ const addTodo = () => {
     createdAt: new Date(),
   });
 
-  todoTitle.value = "";
-  todoContents.value = "";
+  todoTitle.value = '';
+  todoContents.value = '';
 };
 
 const removeTodo = (id: number) => {
